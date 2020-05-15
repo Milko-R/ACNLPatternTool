@@ -11,9 +11,7 @@
 
     <ModalContainer v-if="open" @modal-close="open=false">
       <template #window>
-        <transition name="fade">
-          <NavigationMenu />
-        </transition>
+        <NavigationMenu @modal-close="open = false"/>
       </template>
     </ModalContainer>
   </button>
@@ -41,19 +39,11 @@ export default {
 <style lang="scss" scoped>
 @import "../../styles/colors";
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
-}
-
+// desktop
+$menu-button-size: 74px;
 .menu-button--container {
-  position: relative;
-  top: 0;
-  left: 0;
-  width: 74px;
-  height: 74px;
+  width: $menu-button-size;
+  height: $menu-button-size;
 
   background-color: $van-cleef;
   border-radius: 15px;

@@ -117,6 +117,7 @@ export default {
         window.open(path);
       }
       else if (path !== this.$route.path) {
+        this.$emit('modal-close');
         this.$router.push({ path });
       }
     },
