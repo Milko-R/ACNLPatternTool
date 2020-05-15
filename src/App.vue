@@ -1,7 +1,7 @@
 <template>
   <div id="app" :class="classes">
     <router-view></router-view>
-    <NavigationButton class="nav-button" />
+    <NavigationButton/>
     <ModalManager/>
   </div>
 </template>
@@ -35,11 +35,5 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-}
-
-.nav-button {
-  position: absolute;
-  top: 10px;
-  right: 30px;
 }
 </style>

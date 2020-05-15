@@ -45,6 +45,10 @@ $menu-button-size: 74px;
   width: $menu-button-size;
   height: $menu-button-size;
 
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
   background-color: $van-cleef;
   border-radius: 15px;
   outline: none;
@@ -54,8 +58,8 @@ $menu-button-size: 74px;
   }
 
   .menu-button--icon-wrapper {
-    width: 58px;
-    height: 58px;
+    width: 78%;
+    height: 78%;
 
     position: absolute;
     top: 50%;
@@ -67,7 +71,7 @@ $menu-button-size: 74px;
   }
 
   .menu-button--icon {
-    width: 50px;
+    width: 86%;
     height: auto;
 
     transition: transform 0.45s cubic-bezier(.5,-1.5,.5,1.5);

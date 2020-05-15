@@ -3,16 +3,16 @@
     <div class="menu--header">
       <div class="menu--header-icons-left">
         <img
-          class="menu--header-img"
+          class="menu--header-img menu--header-bars"
           :src="barsSvg"/>
         <img
-          class="menu--header-img"
+          class="menu--header-img menu--header-nook"
           :src="nookSvg"/>
       </div>
-      <div class="menu--time">{{ time  }}</div>
+      <div><span class="menu--time">{{ time  }}</span></div>
       <div class="menu--header-icons-right">
         <img
-          class="menu--header-img"
+          class="menu--header-img menu--header-gps"
           :src="gpsSvg"/>
       </div>
     </div>
@@ -116,8 +116,8 @@ export default {
       if (external) {
         window.open(path);
       }
-      else if (path !== this.$route.path) {
-        this.$emit('modal-close');
+      this.$emit('modal-close');
+      if (path !== this.$route.path) {
         this.$router.push({ path });
       }
     },
@@ -150,7 +150,7 @@ export default {
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: space-around;
-  align-content: flex-start;
+  align-content: flex-end;
 
   position: relative;
   top: 0;
@@ -160,6 +160,7 @@ export default {
 
   .menu--time {
     text-align: center;
+    vertical-align: text-bottom;
   }
   & > * {
         flex: 1 1 0px;
@@ -167,7 +168,13 @@ export default {
         display: inline-block;
   }
   .menu--header-img {
+    display: inline-block;
     height: 1rem;
+    vertical-align: bottom;
+  }
+  .menu--header-gps {
+    height: 1.3rem;
+    position: relative;
   }
 }
 

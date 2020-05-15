@@ -1,108 +1,205 @@
 <template>
-  <div id="palette">
-    <div id="palette-color-row">
-      <IconColorBlobGradientBase
+  <div class="palette--container">
+    <div class="palette--colors">
+      <div
+        :class="{
+          'palette--color-container': true,
+          'picked': drawingTool.currentColor === i-1
+        }"
         v-for="i in 15"
-        :class="{picked: drawingTool.currentColor === i-1}"
-        :key="i-1"
-        class="blob"
-        @click.native="onColorClick($event, i-1)"
+        :key="i"
+        @click="onColorClick($event, i-1)"
         @mousemove="onColorMousemove($event, i-1)"
-        icon-name="color" 
-        :icon-color="paletteColors[i-1]"
-        width="28"
-        height="28"
-      />
-      <div class="img-border picked">
-        <img
-          class="blob"
-          :class="{picked: drawingTool.currentColor === 15}"
-          :src="transparentBlob"
-          @click="onColorClick($event, 15)"
-          @mousemove="onColorMousemove($event, 15)"
-        >
+      >
+        <IconColorBlob class="palette--color" :color="paletteColors[i-1]" />
+
+        <div class="palette--selected-indicator"></div>
       </div>
+
+      <div
+        :class="{
+          'palette--color-container': true,
+          'picked': drawingTool.currentColor === 15
+        }"
+        @click="onColorClick($event, 15)"
+        @mousemove="onColorMousemove($event, 15)"
+      >
+        <IconTransparentBlob class="palette--color" />
+        <div class="palette--selected-indicator"></div>
+      </div>
+    </div>
+
+    <div
+      class="palette--button-hint left"
+      @click="onColorClick($event, drawingTool.currentColor - 1)">
+      <div class="hint">L</div>
+    </div>
+    <div
+      class="palette--button-hint right"
+      @click="onColorClick($event, drawingTool.currentColor + 1)">
+      <div class="hint">R</div>
     </div>
   </div>
 </template>
 
 <script>
-import DrawingTool from "/libs/DrawingTool";
+import DrawingTool from "~/libs/DrawingTool";
 
 // svg icons
-import IconColorBlobGradientBase from '/components/icons/IconColorBlobGradientBase.vue';
-import transparentBlob from '/assets/icons/transparent-blob.svg'
+import IconColorBlob from "~/components/icons/IconColorBlob.vue";
+import IconTransparentBlob from "~/components/icons/IconTransparentBlob.vue";
 
 export default {
   name: "Palette",
   components: {
-    IconColorBlobGradientBase,
+    IconColorBlob,
+    IconTransparentBlob
   },
   props: {
-    drawingTool: DrawingTool,
+    drawingTool: {
+      type: DrawingTool,
+      required: true
+    }
   },
   data: function() {
     const paletteColors = [];
     for (let i = 0; i < 15; ++i)
       paletteColors.push(this.drawingTool.getPalette(i));
-
     return {
       paletteColors,
-      transparentBlob,
-      colorBlobViewBox: "0 0 1002.2 992.31",
-      colorBlobGradientViewBox: "0 0 941.33751 1000",
     };
   },
   methods: {
+    validateIdx: function(idx) {
+      if (idx > 15 ||idx < 0) {
+        console.log("attempted invalid current color value", idx);
+        return;
+      }
+    },
     onColorClick: function(event, idx) {
-      this.$emit('changed-current-color', idx);
+      this.validateIdx(idx);
+      this.$emit("change-current-color", idx);
     },
     onColorMousemove: function(event, idx) {
-      if (event.buttons === 1)
-        this.$emit('changed-current-color', idx);
-    },
+      if (event.buttons === 1) {
+        this.validateIdx(idx);
+        this.$emit("change-current-color", idx);
+      }
+    }
   },
-  mounted: function(){
+  mounted: function() {
     this.drawingTool.onColorChange(() => {
-      let paletteColors = [];
-      for (let i = 0; i < 15; ++i)
-        paletteColors[i] = this.drawingTool.getPalette(i);
-      this.$data.paletteColors = paletteColors;
+      for (let i = 0; i < 15; ++i) {
+        const paletteColor = this.drawingTool.getPalette(i);
+        this.paletteColors.splice(i, 1, paletteColor);
+      }
     });
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-$pink: #F1B5C1;
-$teal: #5DBF98;
+@import "../styles/colors";
 
-#palette {
+// ONLY THING THAT SHOULD BE CHANGED
+$palette--container-size: 800px;
+.palette--container {
+  width: $palette--container-size;
+  display: inline-block;
   user-select: none;
-  border-radius: 0 0 35px 35px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.palette--colors {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 15px 30px;
+
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  grid-template-rows: 1fr;
+  column-gap: 10px;
+  justify-items: center;
+
   background-color: $pink;
-  padding: 15px;
-  width: 480px;
-  box-shadow: rgba(0,0,0,0.2) 0 0 8px;
+  border-radius: 30px;
+}
 
-  #palette-color-row {
-  height: 32px;
-  display: flex;
-  justify-content: center;
+.palette--color-container {
+  transition: transform 0.10s ease-in-out;
+  display: inline-block;
+  cursor: pointer;
+  transform: scale(1);
+  &:hover {
+    transform: scale(1.2);
   }
-  .blob {
-    cursor: pointer;
-    padding: 0 3px 5px;
-    height: 28px;
-    width: 28px;
-    box-sizing: content-box;
 
-    &.picked{
-      border-bottom: 4px solid $teal;
-    }
+  .palette--selected-indicator {
+    width: 30px;
+    height: 8px;
+
+    position: absolute;
+    left: 50%;
+    bottom: -10px;
+    transform: translate(-50%, 0px) scale(0);
+
+    transition: transform 0.10s ease-in-out;
+    background-color: $tiffany-blue;
+    border-radius: 4px;
+    opacity: 0;
   }
-  img.blob {
-    width: 24px;
+  &.picked .palette--selected-indicator {
+    transform: translate(-50%, 0px) scale(1);
+    opacity: 1;
   }
 }
+
+.palette--color {
+  width: 100%;
+}
+
+.palette--button-hint {
+  position: absolute;
+  background-color: $pink;
+  padding: 5px;
+  box-sizing: content-box;
+  bottom: 0px;
+
+
+  &.left {
+    left: 0px;
+    transform: translate(-50%, 50%);
+  }
+  &.right {
+    right: 0px;
+    transform: translate(50%, 50%);
+  }
+
+  display: block;
+  color: white;
+  border-radius: 999px;
+
+  width: 30px;
+  height: 30px;
+
+  .hint {
+    width: 30px;
+    height: 30px;
+    font-size: 1.25rem;
+    line-height: 30px;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    background-color: $sand-dune;
+    border-radius: 999px;
+
+    cursor: pointer;
+  }
+}
+
 </style>

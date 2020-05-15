@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '~/pages/Home.vue';
 import Browse from '~/pages/Browse.vue';
-import Editor from '~/pages/Editor.vue';
+import Editor from '~/pages/Editor';
 import FAQ from '~/pages/FAQ.vue';
 import Passports from '~/pages/Passports.vue';
 import Updates from '~/pages/Updates.vue';

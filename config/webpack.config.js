@@ -195,6 +195,7 @@ const pluginsProd = [
   }),
 ];
 
+
 const optimizatonProd = {
   minimizer: [
     new TerserPlugin({
@@ -209,6 +210,14 @@ const optimizatonProd = {
   ],
 };
 
+const resolve = {
+  extensions: [
+    ".mjs",
+    ".js",
+    ".vue"
+  ],
+};
+
 const webpackDevConfig = {
   mode: "development",
   devtool: "source-map",
@@ -217,7 +226,8 @@ const webpackDevConfig = {
   module: {
     rules: rulesDev
   },
-  plugins: pluginsDev
+  plugins: pluginsDev,
+  resolve
 };
 
 const webpackProdConfig = {
@@ -233,6 +243,7 @@ const webpackProdConfig = {
   // ignore webpack performance warnings
   // not a good gauge
   performance: false,
+  resolve
 };
 
 // default setting, set by .env

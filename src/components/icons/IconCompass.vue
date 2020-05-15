@@ -19,7 +19,7 @@
   </svg>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .cls-1 {
   fill: #503c35;
 }
