@@ -18,9 +18,9 @@
 </template>
 
 <script>
-import NavigationMenu from "~/components/partials/NavigationMenu.vue";
-import ModalContainer from "~/components/ModalContainer.vue";
-import IconCompass from "~/components/icons/IconCompass.vue";
+import NavigationMenu from "~/components/positioned/NavigationMenu";
+import ModalContainer from '~/components/positioned/ModalContainer';
+import IconCompass from "~/components/icons/IconCompass";
 
 export default {
   data: function() {

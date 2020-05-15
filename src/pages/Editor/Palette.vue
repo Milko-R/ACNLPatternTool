@@ -99,7 +99,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../styles/colors";
+@import "../../styles/colors";
 
 // ONLY THING THAT SHOULD BE CHANGED
 $palette--container-size: 800px;

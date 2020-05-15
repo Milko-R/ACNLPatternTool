@@ -23,7 +23,7 @@ import lzString from 'lz-string';
 import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
 
-import Palette from "~/components/Palette.vue";
+import Palette from "./Palette.vue";
 
 export default {
   name: 'Editor',

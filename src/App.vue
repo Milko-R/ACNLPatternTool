@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import NavigationButton from '~/components/partials/NavigationButton.vue';
-import ModalManager from '~/components/ModalManager.vue';
+import NavigationButton from '~/components/positioned/NavigationButton.vue';
+import ModalManager from '~/components/positioned/ModalManager.vue';
 import { isMobile } from '~/utils/if-env';
 
 export default {

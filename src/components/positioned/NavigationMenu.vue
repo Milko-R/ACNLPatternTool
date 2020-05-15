@@ -72,8 +72,7 @@ import changelogSvg from '/assets/icons/nookphone/nav-changelog.svg';
 import discordSvg from '/assets/icons/nookphone/nav-discord.svg';
 import nooknetSvg from '/assets/icons/nookphone/nav-nooknet.svg';
 
-import ModalContainer from "~/components/ModalContainer.vue";
-
+import ModalContainer from '~/components/positioned/ModalContainer';
 
 const menuTitleDefault = "Main Menu";
 export default {
