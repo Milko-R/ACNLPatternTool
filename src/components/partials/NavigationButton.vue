@@ -1,63 +1,96 @@
 <template>
-  <div>
-    <button id="nav-button">
-      <img 
-        id="nav-icon"
-        :src="compassSvg"
-        @click="open=!open"
-      >
-    </button>
+  <button
+    :class="{
+      'menu-button--container': true,
+      'menu-button--container--open': open
+    }"
+    @click="open=true">
+    <div class="menu-button--icon-wrapper">
+      <IconCompass class="menu-button--icon" />
+    </div>
 
     <ModalContainer v-if="open" @modal-close="open=false">
       <template #window>
-        <NookPhoneMenu 
-          v-model="open"/>
+        <transition name="fade">
+          <NavigationMenu />
+        </transition>
       </template>
     </ModalContainer>
-  </div>
+  </button>
 </template>
 
 <script>
-import NookPhoneMenu from '/components/partials/NookPhoneMenu.vue';
-import ModalContainer from '/components/ModalContainer.vue';
-
-/* svg icons */
-import compassSvg from '/assets/icons/nookphone/compass.svg';
+import NavigationMenu from "~/components/partials/NavigationMenu.vue";
+import ModalContainer from "~/components/ModalContainer.vue";
+import IconCompass from "~/components/icons/IconCompass.vue";
 
 export default {
   data: function() {
     return {
       open: false,
-      compassSvg,
-    }
+    };
   },
   components: {
     ModalContainer,
-    NookPhoneMenu,
+    NavigationMenu,
+    IconCompass
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-$dark-brown: #4D3D36;
-$off-white: #F8F3E8;
+@import "../../styles/colors";
 
-#nav-button {
-  background: $dark-brown;
-  border-radius: 8px;
-  padding: 8px;
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
 
-  display: flex;
-  align-items: center;
+.menu-button--container {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 74px;
+  height: 74px;
 
-  #nav-icon {
-    background: $off-white;
-    border-radius: 100%;
+  background-color: $van-cleef;
+  border-radius: 15px;
+  outline: none;
+
+  &:hover {
     cursor: pointer;
-    height: 25px;
-    padding: 3px;
-    transform: rotate(20deg);
-    width: 25px;
+  }
+
+  .menu-button--icon-wrapper {
+    width: 58px;
+    height: 58px;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0);
+
+    background-color: $ecru-white;
+    border-radius: 999px;
+  }
+
+  .menu-button--icon {
+    width: 50px;
+    height: auto;
+
+    transition: transform 0.45s cubic-bezier(.5,-1.5,.5,1.5);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(30deg);
+  }
+
+  &:hover, &.menu-button--container--open {
+    .menu-button--icon {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
   }
 }
 </style>

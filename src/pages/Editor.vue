@@ -8,7 +8,7 @@
             <canvas class="fordrawing" ref="canvas3" width="64" height="64"/>
           </div><!-- flat canvases -->
 
-          <PatternInfo 
+          <PatternInfo
             @update="update"
             :types="drawingTool.allTypes"
             :pattern-details="patternDetails"
@@ -27,19 +27,18 @@
           :drawing-tool="drawingTool"
           @changed-current-color="onChangedCurrentColor"/>
 
-        <ColorPicker 
+        <ColorPicker
           ref="colorPickerMenu"
           :drawingTool="drawingTool"
           :acnlMode="acnlMode"
           @handler="colorPickerHandler"
           @color-picked="onColorPicked"
         />
-        
+
         <canvas class="fordrawing" ref="canvas1" width="512" height="512"/>
       </div><!-- canvas and color palette -->
 
       <div id="right">
-        <NavigationButton id="topbar-button"/><!-- navigation menu button -->
 
         <div class="tools-and-colors">
           <ToolSelector @newtool="toolChange" @newtoolalt="toolChangeAlt" /><!-- tool selection sidebar -->
@@ -59,9 +58,9 @@
               Open Color Editor
             </button><!-- open palette button -->
 
-            <button 
-              id="download-acnl" 
-              :value="$tc('editor.download')" 
+            <button
+              id="download-acnl"
+              :value="$tc('editor.download')"
               @click="downACNL">
                 <IconBase icon-name="save" :icon-color="teal" class="svg nav white-circle">
                   <IconSave />
@@ -75,13 +74,13 @@
 
             <button @click="downTex">Save Texture</button>
 
-            <Publish 
+            <Publish
               @update="update"
               :drawing-tool="drawingTool"
               :pattern-details="patternDetails"
             /><!-- publish pattern to database button -->
 
-            <ConvertImage 
+            <ConvertImage
               :drawing-tool="drawingTool"
               :type="patternDetails.patType"
             />
@@ -129,9 +128,6 @@ import ConvertImage from '/components/modals/ConvertImage.vue';
 import PatternInfo from '/components/modals/PatternInfo.vue';
 import Publish from '/components/modals/Publish.vue';
 
-/* partials */
-import NavigationButton from '/components/partials/NavigationButton.vue';
-
 /* libs */
 import DrawingTool from '/libs/DrawingTool';
 import ACNLFormat from '/libs/ACNLFormat';
@@ -158,7 +154,6 @@ export default {
     ACNLQRGenerator,
     IconGenerator,
     ModalContainer,
-    NavigationButton,
     ToolSelector,
     ConvertImage,
     ColorPicker,
@@ -484,13 +479,6 @@ export default {
       height: 100px;
       width: 100px;
     }
-  }
-
-  #topbar-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-evenly;
-    height: 62px;
   }
 
   main {

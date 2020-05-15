@@ -1,12 +1,14 @@
 <template>
-  <div id=app :class="classes">
+  <div id="app" :class="classes">
     <router-view></router-view>
+    <NavigationButton class="nav-button" />
     <ModalManager/>
   </div>
 </template>
 
 <script>
-import ModalManager from '/components/ModalManager.vue';
+import NavigationButton from '~/components/partials/NavigationButton.vue';
+import ModalManager from '~/components/ModalManager.vue';
 import { isMobile } from '~/utils/if-env';
 
 export default {
@@ -20,16 +22,23 @@ export default {
     };
   },
   components: {
-    ModalManager
+    ModalManager,
+    NavigationButton
   },
 }
 </script>
 
 <style lang="scss" scoped>
-#app {
+.app {
   position: relative;
   top: 0;
   left: 0;
   height: 100%;
+}
+
+.nav-button {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 </style>

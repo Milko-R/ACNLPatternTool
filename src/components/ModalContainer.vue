@@ -9,7 +9,7 @@
 
       <!-- provided overlayed -->
       <slot
-        v-if="$slots.overlay"
+        v-if="!!$slots.overlay"
         name="overlay"
         @click.self="onOverlayClick($event)">
       </slot>
@@ -17,7 +17,7 @@
       <!-- default overlay -->
       <div
         v-if="!$slots.overlay"
-        class="modal--overlay--default"
+        class="overlay--default"
         @click.self="onOverlayClick($event)">
       </div>
     </div>
@@ -64,6 +64,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../styles/colors";
+
 .modal {
   position: absolute;
   top: 0;
@@ -73,17 +75,23 @@ export default {
   z-index: 999;
 }
 
-.modal--overlay--default {
+.window {
+  z-index: 999;
+}
+
+.overlay--default {
+  display: block;
+  height: 100%;
+  width: 100%;
+
   position: fixed;
   top: 0;
   left: 0;
-  height: 100%;
-  width: 100%;
-  background-color: rgba(0,0,0,.8);
-  display:table-cell;
-  vertical-align:middle;
-  overflow:auto;
-  z-index: -999;
+
+  background-color: $silver-sand;
+  opacity: 0.5;
+  overflow: auto;
+  z-index: 0;
 
   &:hover {
     cursor: pointer;
