@@ -1,9 +1,10 @@
 <template>
   <main class="editor--container">
     <div class="" style="text-align: center">
-      <Palette
+      <ColorTools
         :drawingTool="drawingTool"
-        @change-current-color="onChangeCurrentColor"/>
+        @change-current-color="onChangeCurrentColor"
+        @color-picked="onColorPicked"/>
     </div>
     <div class="editor--main">
     </div>
@@ -23,12 +24,12 @@ import lzString from 'lz-string';
 import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
 
-import Palette from "./Palette.vue";
+import ColorTools from "./ColorTools";
 
 export default {
   name: 'Editor',
   components: {
-    Palette
+    ColorTools
   },
   beforeRouteUpdate: function (to, from, next) {
     if (to.hash.length > 1) {
@@ -299,9 +300,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "../../styles/colors";
+  @import "styles/colors";
 
   .editor--container {
-
   }
 </style>

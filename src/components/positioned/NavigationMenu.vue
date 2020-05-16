@@ -125,7 +125,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/colors";
+@import "styles/colors";
 
 .menu--container {
   display: inline-block;

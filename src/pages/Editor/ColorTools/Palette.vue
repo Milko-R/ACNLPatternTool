@@ -70,19 +70,19 @@ export default {
     };
   },
   methods: {
-    validateIdx: function(idx) {
+    invalidIdx: function(idx) {
       if (idx > 15 ||idx < 0) {
-        console.log("attempted invalid current color value", idx);
-        return;
+        console.log("detected invalid current color value:", idx);
+        return true;
       }
     },
     onColorClick: function(event, idx) {
-      this.validateIdx(idx);
+      if (this.invalidIdx(idx)) return;
       this.$emit("change-current-color", idx);
     },
     onColorMousemove: function(event, idx) {
       if (event.buttons === 1) {
-        this.validateIdx(idx);
+        if (this.invalidIdx(idx)) return;
         this.$emit("change-current-color", idx);
       }
     }
@@ -99,14 +99,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/colors";
+@import "../../../styles/colors";
 
 // ONLY THING THAT SHOULD BE CHANGED
+// NEEDS A CLASS APPLIED TO CONTROL SIZE
 $palette--container-size: 800px;
 .palette--container {
   width: $palette--container-size;
   display: inline-block;
   user-select: none;
+
   position: relative;
   top: 0;
   left: 0;
@@ -138,11 +140,11 @@ $palette--container-size: 800px;
 
   .palette--selected-indicator {
     width: 30px;
-    height: 8px;
+    height: 6px;
 
     position: absolute;
     left: 50%;
-    bottom: -10px;
+    bottom: -8px;
     transform: translate(-50%, 0px) scale(0);
 
     transition: transform 0.10s ease-in-out;
@@ -165,15 +167,16 @@ $palette--container-size: 800px;
   background-color: $pink;
   padding: 5px;
   box-sizing: content-box;
-  bottom: 0px;
+  bottom: 8px;
+  $horizontal-correction: 10px;
 
 
   &.left {
-    left: 0px;
+    left: $horizontal-correction;
     transform: translate(-50%, 50%);
   }
   &.right {
-    right: 0px;
+    right: $horizontal-correction;
     transform: translate(50%, 50%);
   }
 
@@ -189,6 +192,7 @@ $palette--container-size: 800px;
     height: 30px;
     font-size: 1.25rem;
     line-height: 30px;
+    text-align: center;
 
     position: absolute;
     top: 50%;

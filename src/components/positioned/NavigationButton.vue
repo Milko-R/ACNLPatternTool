@@ -37,7 +37,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/colors";
+@import "styles/colors";
 
 // desktop
 $menu-button-size: 74px;

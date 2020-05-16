@@ -11,6 +11,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const OptimizeThreePlugin = require('@vxna/optimize-three-webpack-plugin');
 const env = require('../etc/env'); // assume already loaded, checked
 const {
+  pathToClientSrc,
   pathToBuild,
   pathToPublicIndex,
   pathToFavicon,
@@ -56,6 +57,7 @@ const vueRule = {
   loader: 'vue-loader'
 };
 
+
 const scssRuleDev = {
   test: /\.s?css$/i,
   use: [
@@ -65,6 +67,9 @@ const scssRuleDev = {
       loader: 'sass-loader',
       options: {
         sourceMap: true,
+        sassOptions: {
+          includePaths: [pathToClientSrc]
+        }
       }
     }
   ]
@@ -81,6 +86,7 @@ const scssRuleProd = {
       options: {
         sourceMap: false,
         sassOptions: {
+          ...scssRuleDev.use[2].options.sassOptions,
           outputStyle: 'compressed',
         }
       }
