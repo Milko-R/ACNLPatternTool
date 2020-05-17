@@ -24,7 +24,7 @@
       <!-- need this to control canvas ratio -->
       <div class="editor--previews"></div>
       <div class="editor--canvas-container">
-        <canvas class="editor--canvas" />
+        <canvas class="editor--canvas" ref="main" />
       </div>
 
       <Toolbar
@@ -35,7 +35,8 @@
         :settingsActive="false"
         @open-settings="onChangeSettingsActive(true)"
         :previewActive="false"
-        @open-preview="onChangePreviewActive(true)"/>
+        @open-preview="onChangePreviewActive(true)"
+      />
     </div>
 
     <div class="editor--main"></div>
@@ -118,19 +119,7 @@ export default {
     };
   },
   methods: {
-    colorPickerHandler(e, close = false) {
-      if (this.drawingTool.currentColor !== 15) {
-        const height = this.acnlMode ? 430 : 240;
-        this.colorPicker = !this.colorPicker;
-        if (close && this.colorPicker) this.colorPicker = false;
-        this.$refs.colorPickerMenu.$el.style.height = `${
-          !this.colorPicker ? 0 : height
-        }px`;
-        return;
-      }
-      alert("This one has to stay transparent. :)");
-    },
-    update(data) {
+    update: function(data) {
       if (data.details) {
         this.patternDetails = {
           ...this.patternDetails,
@@ -154,7 +143,7 @@ export default {
         this.patTypeName = this.drawingTool.typeInfo.name;
       }
     },
-    onOpenLocal() {
+    onOpenLocal: function() {
       this.closeColorPicker();
       let tmp = {};
       for (const i in localStorage) {
@@ -168,7 +157,7 @@ export default {
       this.pickPatterns = tmp;
       this.allowMoveToLocal = false;
     },
-    zipPicksAsACNL() {
+    zipPicksAsACNL: function() {
       let zip = new JSZip();
       const titles = [];
       for (const i in this.pickPatterns) {
@@ -264,12 +253,6 @@ export default {
         );
       }
     },
-    toolChange(newTool) {
-      this.drawingTool.drawHandler = newTool;
-    },
-    toolChangeAlt(newTool) {
-      this.drawingTool.drawHandlerAlt = newTool;
-    },
     downACNL() {
       const blob = new Blob([this.drawingTool.toBytes()], {
         type: "application/octet-stream"
@@ -298,8 +281,7 @@ export default {
       console.log(`changed current color: ${idx}`);
     },
     onChangeColorPicker: function(mode) {
-      if (this.colorPicker != null)
-        this.prevColorPicker = this.colorPicker;
+      if (this.colorPicker != null) this.prevColorPicker = this.colorPicker;
       this.colorPicker = mode;
     },
     onChangeSettingsActive: function(isActive) {
@@ -348,41 +330,38 @@ export default {
     }
   },
   mounted: function() {
-    // if (localStorage.getItem('author_acnl')){
-    //   this.drawingTool.authorStrict = localStorage.getItem('author_acnl');
-    //   this.storedAuthorHuman = `${this.drawingTool.creator[0]} / ${this.drawingTool.town[0]}`;
-    // }
-    // this.drawingTool.addCanvas(this.$refs.canvas1, {grid:true});
-    // this.drawingTool.addCanvas(this.$refs.canvas2);
-    // this.drawingTool.addCanvas(this.$refs.canvas3);
-    // this.drawingTool.onLoad(this.onLoad);
-    // if (this.$router.currentRoute.hash.length > 1){
-    //   const hash = this.$router.currentRoute.hash.substring(1);
-    //   if (hash.startsWith("H:")) {
-    //     origin.view(hash.substring(2)).then((r)=>{
-    //       this.drawingTool.load(r);
-    //     });
-    //   } else {
-    //     this.drawingTool.load(lzString.decompressFromEncodedURIComponent(hash));
-    //   }
-    // }
-    // else{
-    //   this.onLoad();
-    //   this.drawingTool.render();
-    // }
-    // // todo: can make this more vue-like
-    // document.addEventListener('keydown', (e) => {
-    //   if (e.ctrlKey && e.key === 'Z') {
-    //     this.drawingTool.redo();
-    //     e.preventDefault();
-    //     return;
-    //   }
-    //   if (e.ctrlKey && e.key === 'z') {
-    //     this.drawingTool.undo();
-    //     e.preventDefault();
-    //     return;
-    //   }
-    // });
+    if (localStorage.getItem("author_acnl")) {
+      this.drawingTool.authorStrict = localStorage.getItem("author_acnl");
+      this.storedAuthorHuman = `${this.drawingTool.creator[0]} / ${this.drawingTool.town[0]}`;
+    }
+    this.drawingTool.addCanvas(this.$refs.main, { grid: true });
+    if (this.$router.currentRoute.hash.length > 1) {
+      const hash = this.$router.currentRoute.hash.substring(1);
+      if (hash.startsWith("H:")) {
+        origin.view(hash.substring(2)).then(r => {
+          this.drawingTool.load(r);
+        });
+      } else {
+        this.drawingTool.load(lzString.decompressFromEncodedURIComponent(hash));
+      }
+    } else {
+      this.onLoad();
+      this.drawingTool.render();
+    }
+    // todo: can make this more vue-like
+    // undo/redo functionality
+    document.addEventListener("keydown", e => {
+      if (e.ctrlKey && e.key === "Z") {
+        this.drawingTool.redo();
+        e.preventDefault();
+        return;
+      }
+      if (e.ctrlKey && e.key === "z") {
+        this.drawingTool.undo();
+        e.preventDefault();
+        return;
+      }
+    });
   }
 };
 </script>
