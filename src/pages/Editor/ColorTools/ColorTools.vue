@@ -1,30 +1,60 @@
 <template>
-  <div class="color-tools--container open">
+  <div :class="{
+      'color-tools--container': true,
+      'picking': isPicking,
+    }">
+
     <Palette
       :drawingTool="drawingTool"
       @change-current-color="onChangeCurrentColor"/>
 
-
-    <div class="color-tools--color-pickers">
-      <div class="color-tools--color-picker-tabs">
-        <div class="color-tools--color-picker-tab open">
+    <div v-show="isPicking" class="color-tools--color-pickers">
+      <div class="color-tools--tabs acnl">
+        <div
+          :class="{
+            'color-tools--tab': true,
+            'open': isACNL,
+          }"
+          @click="onChangeColorPicker('acnl')">
           ACNL
         </div>
-        <div class="color-tools--color-picker-tab">
+        <div
+          :class="{
+            'color-tools--tab': true,
+            'open': isACNH,
+          }"
+          @click="onChangeColorPicker('acnh')">
           ACNH
         </div>
-        <div class="color-tools--color-picker-tab">
+        <!-- <div
+          :class="{
+            'color-tools--tab': true,
+            'open': isWheel,
+          }">
           Wheel
-        </div>
+        </div> -->
+        <div class="color-tools--tab-cover"></div>
       </div>
 
-      <div class="color-tools--color-picker-content">
+      <div :class="{
+        'color-tools--color-picker-content': true,
+        'acnl': isACNL,
+        'acnh': isACNH,
+      }">
         <ACNLColorPicker
+          v-show="isACNL"
+          :drawingTool="drawingTool"
+          @color-picked="onColorPicked"/>
+        <ACNHColorPicker
+          v-if="isACNH"
           :drawingTool="drawingTool"
           @color-picked="onColorPicked"/>
       </div>
     </div>
 
+    <div
+      class="color-picker-close">
+    </div>
   </div>
 </template>
 
@@ -33,37 +63,53 @@
 import Palette from "./Palette";
 import DrawingTool from "~/libs/DrawingTool";
 import ACNLColorPicker from "./ACNLColorPicker";
+import ACNHColorPicker from "./ACNHColorPicker";
 
+const colorPickerDefault = "acnl";
+const validACNLColorPickers = new Set(["acnl"]);
+const validACNHColorPickers = new Set(["acnl", "acnh"]);
 export default {
   name: "ColorTools",
+  components: {
+    Palette,
+    ACNLColorPicker,
+    ACNHColorPicker
+  },
   props: {
     drawingTool: {
       type: DrawingTool,
       required: true
     },
-    openColorPicker: {
-      type: Boolean,
-      required: false
-    },
-    mode: {
+    colorPicker: {
       type: String,
       required: false
     }
   },
-  components: {
-    Palette,
-    ACNLColorPicker
+  computed: {
+    isPicking: function() {
+      return this.colorPicker != null;
+    },
+    isACNL: function() {
+      return this.colorPicker === "acnl";
+    },
+    isACNH: function() {
+      return this.colorPicker === "acnh"
+    },
+    isWheel: function() {
+      return this.colorPicker === "wheel"
+    },
   },
   methods: {
+    // also responsible for closing, send null to close
+    onChangeColorPicker: function(colorPickerMode) {
+      this.$emit("change-color-picker", colorPickerMode);
+    },
     onChangeCurrentColor: function(idx) {
       this.$emit("change-current-color", idx);
     },
     onColorPicked: function(color) {
       this.$emit("color-picked", color);
     },
-    onColorPickerClose: function() {
-      this.$emit("color-picker-close");
-    }
   }
 }
 </script>
@@ -88,7 +134,7 @@ export default {
   border-radius: 0px 0px 50px 50px;
   text-align: left;
 
-  &.open {
+  &.picking {
     background: repeating-linear-gradient(
       -45deg,
       $pastel-pink,
@@ -97,7 +143,7 @@ export default {
       $piggy-pink 40px
     );
     background-size: 200% 200%;
-    // animation: color-tools-barberpole 20s linear infinite;
+    animation: color-tools-barberpole 20s linear infinite;
     padding-bottom: 25px;
   }
 }
@@ -106,30 +152,62 @@ export default {
   margin-top: 15px;
 }
 
-.color-tools--color-picker-tabs {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: auto;
+.color-tools--tabs {
+  position: relative;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: stretch;
+}
+
+.color-tools--tab {
+  flex: 1 1 0px;
+  padding-top: 15px;
+  padding-bottom: 10px;
+
+  background-color: $pastel-pink;
   color: $umber;
-
-
-  .color-tools--color-picker-tab {
-    padding-top: 10px;
-    padding-bottom: 15px;
-    background-color: $pastel-pink;
-    text-align: center;
-    &.open {
-      background-color: $pink;
-      cursor: default;
-    }
-    cursor: pointer;
-    border-radius: 25px 25px 0px 0px;
+  text-align: center;
+  &.open {
+    background-color: $pink;
+    cursor: default;
   }
+  cursor: pointer;
+  border-radius: 25px 25px 0px 0px;
+  z-index: 1;
+}
+
+.color-tools--tab-cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(0%, 100%);
+  width: 100%;
+  height: 100%;
+  background-color: $pastel-pink;
 }
 
 .color-tools--color-picker-content {
+  position: relative;
+  top: 0;
+  left: 0;
+
   background-color: pink;
   padding: 20px 25px;
-  border-radius: 0px 20px 20px 20px;
+  border-radius: 0px 0px 20px 20px;
+
+  &.acnl {
+    border-radius: 0px 20px 20px 20px;
+  }
+  &.acnh {
+    border-radius: 20px 0px 20px 20px;
+  }
+
+  // &.wheel {
+  //   border-radius: 0px 0px 20px 20px;
+  // }
 }
 </style>

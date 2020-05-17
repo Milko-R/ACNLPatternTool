@@ -18,9 +18,9 @@
 </template>
 
 <script>
-import NavigationMenu from "~/components/positioned/NavigationMenu";
-import ModalContainer from '~/components/positioned/ModalContainer';
-import IconCompass from "~/components/icons/IconCompass";
+import NavigationMenu from "~/components/positioned/NavigationMenu.vue";
+import ModalContainer from '~/components/positioned/ModalContainer.vue';
+import IconCompass from "~/components/icons/IconCompass.vue";
 
 export default {
   data: function() {
@@ -42,6 +42,7 @@ export default {
 // desktop
 $menu-button-size: 74px;
 .menu-button--container {
+  transition: transform 0.1s ease-in-out;
   width: $menu-button-size;
   height: $menu-button-size;
 
@@ -49,12 +50,17 @@ $menu-button-size: 74px;
   top: 10px;
   right: 10px;
 
+  -webkit-appearance: none;
   background-color: $van-cleef;
   border-radius: 15px;
   outline: none;
 
+  transform: scale(1);
+
+  border: 0px;
   &:hover {
     cursor: pointer;
+    transform: scale(1.1);
   }
 
   .menu-button--icon-wrapper {

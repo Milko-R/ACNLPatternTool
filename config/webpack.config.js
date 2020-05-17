@@ -143,7 +143,7 @@ const rulesProd = [
 ];
 
 const fonts = [
-  { family: "Nunito", variants: ["700", "800"] },
+  { family: "Nunito", variants: ["600", "700", "800"] },
 ];
 
 const htmlWebpackOptions = {
@@ -218,7 +218,6 @@ const optimizatonProd = {
 
 const resolve = {
   extensions: [
-    ".mjs",
     ".js",
     ".vue"
   ],

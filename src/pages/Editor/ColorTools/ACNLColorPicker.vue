@@ -5,8 +5,10 @@
         class="color-picker--vibrant-block"
         v-for="(block, i) in vibrantBlocks"
         :key="i"
-        :style="{ borderColor: block[4] }"
-        >
+        :style="{
+          borderColor: block[4],
+          backgroundColor: block[4]
+          }">
         <div
           :class="{
             'color-picker--vibrant-color': true,
@@ -77,10 +79,16 @@ export default {
       if (event.buttons === 1) {
         this.$emit("color-picked", color);
       }
+    },
+    updateCurrColor: function() {
+      this.$data.currColor = this.drawingTool.color;
     }
   },
   mounted: function(){
-    this.drawingTool.onColorChange(() => {this.$data.currColor = this.drawingTool.color;});
+    this.drawingTool.onColorChange(this.updateCurrColor);
+  },
+  beforeDestroy: function() {
+    this.drawingTool.onColorChangeRemove(this.updateCurrColor);
   }
 }
 </script>
@@ -89,7 +97,6 @@ export default {
 @import "styles/colors";
 
 .color-picker--container {
-  border-radius: 0px 20px 20px 20px;
   user-select: none;
 }
 
@@ -118,12 +125,6 @@ $vibrant-color-border-radius: $vibrant-block-border-radius - 4px;
 }
 
 .color-picker--vibrant-color {
-  box-sizing: border-box;
-  position: relative;
-  top: 0;
-  left: 0;
-  cursor: pointer;
-
   &:nth-child(1) {
     border-top-left-radius: $vibrant-color-border-radius;
   }
@@ -138,7 +139,8 @@ $vibrant-color-border-radius: $vibrant-block-border-radius - 4px;
   }
 }
 
-.color-picker--vibrant-color-highlight {
+.color-picker--vibrant-color-highlight,
+.color-picker--mono-color-highlight {
   width: 4px;
   height: 4px;
   border-radius: 100%;
@@ -163,19 +165,13 @@ $mono-color-border-radius: $mono-block-border-radius - 5px;
   justify-items: stretch;
 
   border-color: #7e7261;
-  border-width: 5px;
+  border-width: 4px;
   border-style: solid;
   border-radius: $mono-block-border-radius;
 }
 
 
 .color-picker--mono-color {
-  box-sizing: border-box;
-
-  position: relative;
-  top: 0;
-  left: 0;
-
   &:nth-child(1) {
     border-top-left-radius: $mono-color-border-radius;
     border-bottom-left-radius: $mono-color-border-radius;
@@ -189,6 +185,12 @@ $mono-color-border-radius: $mono-block-border-radius - 5px;
 
 .color-picker--vibrant-color,
 .color-picker--mono-color {
+  box-sizing: border-box;
+  position: relative;
+  top: 0;
+  left: 0;
+
+  cursor: pointer;
   transition: transform 0.10s ease-in-out;
   &.picked {
     border-width: 4px;
@@ -197,21 +199,8 @@ $mono-color-border-radius: $mono-block-border-radius - 5px;
   }
   &:hover {
     transform: scale(1.2);
-    border-radius: 3px;
+    border-radius: 5px;
     z-index: 1;
   }
 }
-
-.color-picker--mono-color-highlight {
-  width: 4px;
-  height: 4px;
-  border-radius: 100%;
-
-  position: absolute;
-  top: 4px;
-  left: 6px;
-  background-color: white;
-  opacity: 0.5;
-}
-
 </style>
