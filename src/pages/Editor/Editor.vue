@@ -28,9 +28,14 @@
       </div>
 
       <Toolbar
+        :drawingTool="drawingTool"
         :prevColorPicker="prevColorPicker"
         :colorPicker="colorPicker"
-        @change-color-picker="onChangeColorPicker"/>
+        @change-color-picker="onChangeColorPicker"
+        :settingsActive="false"
+        @open-settings="onChangeSettingsActive(true)"
+        :previewActive="false"
+        @open-preview="onChangePreviewActive(true)"/>
     </div>
 
     <div class="editor--main"></div>
@@ -92,9 +97,12 @@ export default {
         selectedStyles: [],
         patType: 9
       },
-      acnlMode: false,
       prevColorPicker: "acnl",
       colorPicker: null,
+      previewActive: false,
+      settingsActive: false,
+
+      acnlMode: false,
       storedAuthorHuman: false,
       fragment: "",
       patTypeName: "",
@@ -294,6 +302,12 @@ export default {
         this.prevColorPicker = this.colorPicker;
       this.colorPicker = mode;
     },
+    onChangeSettingsActive: function(isActive) {
+      this.settingsActive = isActive;
+    },
+    onChangePreviewActive: function(isActive) {
+      this.previewActive = isActive;
+    },
     onLoad: async function(t) {
       let patStr = this.drawingTool.toString();
       this.patType = this.drawingTool.patternType;
@@ -396,7 +410,7 @@ export default {
   width: 100%;
   height: 100%;
   cursor: pointer;
-  z-index: -1;
+  z-index: 0;
 }
 
 .editor--middle-components {

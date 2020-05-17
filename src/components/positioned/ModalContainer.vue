@@ -38,7 +38,6 @@ export default {
   data: function() {return {};},
   methods: {
     onOverlayClick: function(event) {
-      console.log("attmpted");
       this.$emit("modal-close");
     },
     onKeyEscape: function(event) {
