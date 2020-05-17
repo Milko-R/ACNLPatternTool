@@ -59,7 +59,7 @@
         <button
           :class="{
                 'toolbar--shortcut color-picker': true,
-                'active': colorPicker != null,
+                'active': colorPicker !== null && colorPicker !== 'palettes',
               }"
           @click="onChangeColorPicker(prevColorPicker)"
         >
@@ -280,17 +280,17 @@ export default {
      * @param {String} mode
      * @param {String} option
      */
-    selectTool: function(toolStr, optionStr = null) {
+    selectTool: function(newTool, newOption = null) {
       // no matching tool, bail
-      if (!(toolStr in toolMappings)) return;
-      let tool = toolMappings[toolStr];
-      if (optionStr && typeof toolMappings[toolStr] === "object") {
-        if (!(optionStr in toolMappings[toolStr])) return;
-        tool = tool[optionStr];
+      if (!(newTool in toolMappings)) return;
+      let tool = toolMappings[newTool];
+      if (newOption && typeof toolMappings[newTool] === "object") {
+        if (!(newOption in toolMappings[newTool])) return;
+        tool = tool[newOption];
       }
       this.drawingTool.drawHandler = tool;
-      this.tool = toolStr;
-      this.option = optionStr;
+      this.tool = newTool;
+      this.option = newOption;
     },
     // helps determines if the passed tool is the current tool drawHandler
     // can also determine if a tool has options
@@ -319,8 +319,7 @@ export default {
     }
   },
   mounted: function() {
-    this.tool = "fill";
-    this.option = null;
+    this.selectTool("brush", "small");
   }
 };
 </script>
@@ -442,6 +441,7 @@ export default {
     border: 0px;
     outline: none;
     font-family: inherit;
+    padding: 0px;
 
     width: 100%;
     height: 100%;
