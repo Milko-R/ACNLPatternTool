@@ -24,7 +24,7 @@
       <!-- need this to control canvas ratio -->
       <div class="editor--previews"></div>
       <div class="editor--canvas-container">
-        <canvas class="editor--canvas" ref="main" />
+        <canvas class="editor--canvas" width=800 height=800 ref="main" />
       </div>
 
       <Toolbar
@@ -403,11 +403,13 @@ export default {
   position: relative;
   top: 0;
   left: 0;
-  width: 700px;
+  // must be a multiple of 32
+  width: 800px;
 
   &:after {
     content: "";
     display: block;
+    // force 1x1 ratio
     padding-bottom: 100%;
   }
 }

@@ -169,8 +169,8 @@ const brush = (() => {
     tool.drawPixel(x, y);
     tool.drawPixel(x - 1, y); // left
     tool.drawPixel(x + 1, y); // right
-    tool.drawPixel(x + 1, y); // above
-    tool.drawPixel(x + 1, y); // below
+    tool.drawPixel(x, y + 1); // above
+    tool.drawPixel(x, y - 1); // below
   };
 
   const large = (x, y, tool) => {
@@ -200,26 +200,31 @@ const eyeDropper = (x, y, tool) => {
 };
 
 const fill = (x, y, tool) => {
-  let newColor = tool.currentColor;
-  let prevColor = tool.getPixel(x, y);
+  const prevColor = tool.getPixel(x, y);
+  const newColor = tool.currentColor;
   if (prevColor === false) return; // invalid pixel
   if (prevColor === newColor) return; // nothing to flood
-  let reColor = (x, y) => {
-    let thisColor = tool.getPixel(x, y);
-    if (thisColor === prevColor && tool.setPixel(x, y, newColor) === newColor) {
-      reColor(x + 1, y);
-      reColor(x - 1, y);
-      reColor(x, y + 1);
-      reColor(x, y - 1);
+  let counter = 0;
+  const reColor = (inX, inY) => {
+    const thisColor = tool.getPixel(inX, inY);
+    // not we're setting color on pixel data, has not been rendered, speed optimization
+    if (thisColor === prevColor && tool.setPixel(inX, inY, newColor) === newColor) {
+      reColor(inX - 1, inY);
+      reColor(inX + 1, inY);
+      reColor(inX, inY - 1);
+      reColor(inX, inY + 1);
     }
   };
+  reColor(x, y);
+  // render all changes at once
+  tool.render();
 };
 
 // string to handler mappings
 const toolMappings = {
-  brush: brush,
-  fill: fill,
-  eyeDropper: eyeDropper
+  brush,
+  fill,
+  eyeDropper,
 };
 
 export default {
@@ -315,11 +320,19 @@ export default {
       const nextIdx = (idx + 1) % options.length;
       const nextOption = options[nextIdx];
       this.option = nextOption;
-      console.log(`cycled options to: ${tool} ${option}`);
+      this.selectTool(tool, nextOption);
+    },
+    onCycleOptions: function($event) {
+      if (event.code !== "KeyT") return;
+      this.cycleOptions();
     }
   },
   mounted: function() {
     this.selectTool("brush", "small");
+    window.addEventListener("keydown", this.onCycleOptions);
+  },
+  beforeDestroy: function() {
+    window.removeEventListener("keydown", this.onCycleOptions)
   }
 };
 </script>
